@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>填空题测试</title>
+    <style>
+      /* 样式代码 */
+    </style>
+    <!-- 引入 Vue.js 库文件 -->
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  </head>
+  <body onload="shuffleQuestions()">
+    <h1>填空题测试</h1>
+    <div id="question-container">
+      <form v-on:submit.prevent="submitAnswers">
+        <div v-for="(question, index) in shuffledQuestions" :key="index">
+          <p>
+            {{ question }}
+          </p>
+          <input type="text" v-model="answers[index]" />
+        </div>
+        <button type="submit">提交答案</button>
+      </form>
+      <div v-if="showResult">
+        <h2>答题结果</h2>
+        <ul>
+          <li v-for="(result, index) in results" :key="index">
+            {{ result }}
+          </li>
+        </ul>
+      </div>
+    </div>
+    <script>
+      // 填空题数据和正确答案
+      const questions = [
+        "中国的首都是_____。",
+        "日本的首都是_____。",
+        "美国的首都是_____。"
+      ];
+      const answers = ["北京", "东京", "华盛顿"];
+
+      // Vue.js 应用
+      const app = new Vue({
+        el: "#question-container",
+        data: {
+          shuffledQuestions: [],
+          shuffledAnswers: [],
+          answers: [],
+          results: [],
+          showResult: false
+        },
+        methods: {
+          submitAnswers: function () {
+            // 判断每个问题的答案是否正确
+            for (let i = 0; i < this.shuffledQuestions.length; i++) {
+              if (this.answers[i].trim() === this.shuffledAnswers[i]) {
+                this.results[i] = "正确";
+              } else {
+                this.results[i] = "错误，正确答案为：" + this.shuffledAnswers[i];
+              }
+            }
+            // 显示答题结果
+            this.showResult = true;
+          }
+        }
+      });
+
+      // 随机打乱问题顺序和正确答案顺序
+      function shuffleQuestions() {
+        app.shuffledQuestions = shuffleArray(questions);
+        app.shuffledAnswers = shuffleArray(answers);
+        app.answers = new Array(app.shuffledQuestions.length).fill("");
+        app.results = new Array(app.shuffledQuestions.length);
+        app.showResult = false;
+      }
+
+      // 随机打乱数组顺序的函数
+      function shuffleArray(array) {
+        let currentIndex = array.length;
+        let temporaryValue, randomIndex;
+
+        while (0 !== currentIndex) {
+          randomIndex = Math.floor(Math.random() * currentIndex);
+          currentIndex -= 1;
+
+
+          temporaryValue = array[currentIndex];
+          array[currentIndex] = array[randomIndex];
+          array[randomIndex] = temporaryValue;
+        }
+
+        return array;
+      }
+    </script>
+  </body>
+</html>
